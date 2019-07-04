@@ -51,17 +51,17 @@ public class DecisionService {
 
         KStream outputStream = inputTopic.mapValues((key, value) -> {
             try {
-                return makeDecision(value);
+                value = makeDecision(value);
             } catch (ParserConfigurationException e) {
                 e.printStackTrace();
             } catch (ParseException e) {
                 e.printStackTrace();
             }
-            return null;
+            return value;
         });
 
 
-        inputTopic.to("test_topic_xml");
+        outputStream.to("test_topic_xml");
         KafkaStreams kafkaStreams = new KafkaStreams(streamsBuilder.build(), properties);
         kafkaStreams.start();
 
