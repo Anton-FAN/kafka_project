@@ -33,7 +33,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Properties;
 
-public class RequestService {
+public class DecisionService {
     static List<String> data = new ArrayList<>();
 
     public static void main(String[] args) throws IOException, SAXException, ParserConfigurationException, ParseException {
