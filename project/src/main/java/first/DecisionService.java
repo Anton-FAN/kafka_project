@@ -31,6 +31,7 @@ import java.io.StringReader;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.Properties;
 
@@ -68,9 +69,16 @@ public class DecisionService {
 
     static String makeDecision(String xml) throws ParserConfigurationException, ParseException {
         Request request = xmlToClass(xml);
-        System.out.println(request.getAmount());
-        return null;
+        Integer age = new Date().getYear() - request.getBorrower().getDateOfBirth().getYear();
+        if (age > 18 && request.getBorrower().getIncomePerMonth() / 2 > request.getBorrower().getExpensesPerMonth() / 2)
+            return "approved";
+        if (age < 18 || request.getBorrower().getIncomePerMonth() < request.getBorrower().getExpensesPerMonth())
+            return "refused";
+        if (age > 18 && request.getBorrower().getIncomePerMonth() >= request.getBorrower().getExpensesPerMonth() && request.getBorrower().getExpensesPerMonth() > request.getBorrower().getIncomePerMonth() / 2)
+            return "offer" + request.getBorrower().getIncomePerMonth() / 2;
+        return "refused";
     }
+
 
     static Request xmlToClass(String xml) throws ParserConfigurationException, ParseException {
         DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
