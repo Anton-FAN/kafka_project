@@ -96,7 +96,7 @@ public class DecisionService {
                     Text text = (Text) nodeList.item(i).getFirstChild();
                     value += text.getData().trim();
                     data.add(value);
-                    System.out.println(value);
+//                    System.out.println(value);
                 }
                 if (nodeList.item(i).hasChildNodes() && nodeList.item(i) instanceof Element && nodeList.item(i).getChildNodes().getLength() > 1) {
                     NodeList nodeList1 = nodeList.item(i).getChildNodes();
