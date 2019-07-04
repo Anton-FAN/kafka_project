@@ -1,0 +1,22 @@
+<!--<?xml version="1.0" encoding="UTF-8"?>-->
+<request>
+    <date>01/01/2019</date>
+    <amount>5000</amount>
+    <period>30</period>
+    <borrower>
+        <name>Ivan</name>
+        <surname>Ivanov</surname>
+        <second-name>Ivanovich</second-name>
+        <date-of-birth>01/01/1985</date-of-birth>
+        <gender>man</gender>
+        <income-per-month>15000</income-per-month>
+        <expenses-per-month>10000</expenses-per-month>
+        <employer>
+            <inn>123456789</inn>
+            <name>Facebook</name>
+            <phone-number>123456789</phone-number>
+        </employer>
+    </borrower>
+</request>
+
+
