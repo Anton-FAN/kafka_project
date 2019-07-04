@@ -21,6 +21,7 @@ import org.apache.kafka.streams.StreamsConfig;
 import org.apache.kafka.streams.kstream.KStream;
 
 
+import javax.print.Doc;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
@@ -46,31 +47,17 @@ public class DecisionService {
 
         StreamsBuilder streamsBuilder = new StreamsBuilder();
         KStream<String, String> inputTopic = streamsBuilder.stream("test_topic_xml");
-//        KStream<String,String> request = inputTopic.transformValues(
-//                ()-> new ValueTransformerSupplier<>() {
-//                    @Override
-//                    public ValueTransformer get() {
-//                        return null;
-//                    }
-//                }
-        KStream outputStream = inputTopic.transformValues(() -> new ValueTransformer {
 
-                                                              @Override
-                                                              public ValueTransformer get() {
-                                                                  return null;
-                                                              }
-                                                          }
-
-
-                DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
-        DocumentBuilder builder = factory.newDocumentBuilder();
-        Document document = convertStringToXMLDocument(inputTopic.val);
-        Element element = document.getDocumentElement();
-        NodeList nodeList = element.getChildNodes();
-        process(nodeList);
-        Request request = new Request(new SimpleDateFormat("dd/MM/yyyy").parse(data.get(0)), Integer.valueOf(data.get(1)), Integer.valueOf(data.get(2)),
-                new Borrower(data.get(3), data.get(4), data.get(5), new SimpleDateFormat("dd/MM/yyyy").parse(data.get(6)), data.get(7), Integer.valueOf(data.get(8)), Integer.valueOf(data.get(9)),
-                        new Employer(Integer.valueOf(data.get(10)), data.get(11), Integer.valueOf(data.get(12)))));
+        KStream outputStream = inputTopic.mapValues((key, value) -> {
+            try {
+                return makeDecision(value);
+            } catch (ParserConfigurationException e) {
+                e.printStackTrace();
+            } catch (ParseException e) {
+                e.printStackTrace();
+            }
+            return null;
+        });
 
 
         inputTopic.to("test_topic_xml");
@@ -79,8 +66,23 @@ public class DecisionService {
 
     }
 
-    static void makeDecision() {
+    static String makeDecision(String xml) throws ParserConfigurationException, ParseException {
+        Request request = xmlToClass(xml);
+        System.out.println(request.getAmount());
+        return null;
+    }
 
+    static Request xmlToClass(String xml) throws ParserConfigurationException, ParseException {
+        DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
+        DocumentBuilder builder = factory.newDocumentBuilder();
+        Document document = convertStringToXMLDocument(xml);
+        Element element = document.getDocumentElement();
+        NodeList nodeList = element.getChildNodes();
+        process(nodeList);
+        Request request = new Request(new SimpleDateFormat("dd/MM/yyyy").parse(data.get(0)), Integer.valueOf(data.get(1)), Integer.valueOf(data.get(2)),
+                new Borrower(data.get(3), data.get(4), data.get(5), new SimpleDateFormat("dd/MM/yyyy").parse(data.get(6)), data.get(7), Integer.valueOf(data.get(8)), Integer.valueOf(data.get(9)),
+                        new Employer(Integer.valueOf(data.get(10)), data.get(11), Integer.valueOf(data.get(12)))));
+        return request;
     }
 
     static void process(NodeList nodeList) {
