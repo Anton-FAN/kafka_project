@@ -1,6 +1,14 @@
 package second;
 
+import javax.persistence.*;
+
+@Entity
+@Table(name = "Employer",schema = "myschema")
 public class Employer {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+
+    @Column(name = "employer_id")
     private Long id;
     private Integer INN;
     private String name;
@@ -38,9 +46,11 @@ public class Employer {
     public Integer getINN() {
         return INN;
     }
+
     public String getName() {
         return name;
     }
+
     public Integer getPhoneNumber() {
         return phoneNumber;
 

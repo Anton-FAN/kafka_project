@@ -1,8 +1,14 @@
 package second;
 
+import javax.persistence.*;
 import java.util.Date;
-
+@Entity
+@Table(name = "BORROWER",schema = "myschema")
 public class Borrower {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+
+    @Column(name = "borrower_id")
     private Long id;
     private String name;
     private String surname;
@@ -11,6 +17,8 @@ public class Borrower {
     private String gender;
     private Integer incomePerMonth;
     private Integer expensesPerMonth;
+    @OneToOne
+    @JoinColumn(name = "employer_id")
     private Employer employer;
 
     public Borrower() {

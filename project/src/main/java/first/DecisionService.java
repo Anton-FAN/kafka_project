@@ -40,14 +40,11 @@ import java.util.Date;
 import java.util.List;
 import java.util.Properties;
 
-
-
 public class DecisionService {
     static List<String> data = new ArrayList<>();
     final StandardServiceRegistry registry = new StandardServiceRegistryBuilder()
             .configure()
             .build();
-
 
     public static void main(String[] args) throws IOException, SAXException, ParserConfigurationException, ParseException {
 
@@ -81,9 +78,9 @@ public class DecisionService {
     }
 
     static String makeDecision(String xml) throws ParserConfigurationException, ParseException, IOException, SAXException {
-//        final StandardServiceRegistry registry = new StandardServiceRegistryBuilder()
-//                .configure()
-//                .build();
+        final StandardServiceRegistry registry = new StandardServiceRegistryBuilder()
+                .configure()
+                .build();
         Request request = xmlToClass(xml);
         String decision = "refused";
         Integer age = new Date().getYear() - request.getBorrower().getDateOfBirth().getYear();
@@ -94,13 +91,16 @@ public class DecisionService {
         if (age > 18 && request.getBorrower().getIncomePerMonth() >= request.getBorrower().getExpensesPerMonth() && request.getBorrower().getExpensesPerMonth() > request.getBorrower().getIncomePerMonth() / 2)
             decision = "offer: " + request.getBorrower().getIncomePerMonth() / 2;
         request.setDecision(decision);
-//        try(SessionFactory sessionFactory = new MetadataSources( registry ).buildMetadata().buildSessionFactory();
-//            Session session = sessionFactory.openSession();
-//        ) {
-//            session.beginTransaction();
-//            session.save(request);
-//            session.getTransaction().commit();
-//        }
+        try (SessionFactory sessionFactory = new MetadataSources(registry).buildMetadata().buildSessionFactory();
+             Session session = sessionFactory.openSession()
+        ) {
+            session.beginTransaction();
+            session.save(request.getBorrower().getEmployer());
+            session.save(request.getBorrower());
+            session.save(request);
+
+            session.getTransaction().commit();
+        }
         return decision;
     }
 
