@@ -3,7 +3,7 @@ package second;
 import javax.persistence.*;
 import java.util.Date;
 @Entity
-@Table(name = "BORROWER",schema = "myschema")
+@Table(name = "BORROWER")
 public class Borrower {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

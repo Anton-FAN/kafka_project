@@ -28,10 +28,16 @@
             <version>5.4.3.Final</version>
             <type>pom</type>
         </dependency>
+        <!--<dependency>-->
+            <!--<groupId>postgresql</groupId>-->
+            <!--<artifactId>postgresql</artifactId>-->
+            <!--<version>9.1-901-1.jdbc4</version>-->
+        <!--</dependency>-->
         <dependency>
-            <groupId>postgresql</groupId>
+            <groupId>org.postgresql</groupId>
             <artifactId>postgresql</artifactId>
-            <version>9.1-901-1.jdbc4</version>
+            <version>42.2.6</version>
+            <!--<type>bundle</type>-->
         </dependency>
 
     </dependencies>
