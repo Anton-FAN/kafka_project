@@ -6,6 +6,11 @@ import org.apache.kafka.streams.processor.ProcessorContext;
 import org.apache.kafka.streams.processor.PunctuationType;
 import org.apache.kafka.streams.processor.Punctuator;
 import org.apache.kafka.streams.processor.StateStore;
+import org.hibernate.Session;
+import org.hibernate.SessionFactory;
+import org.hibernate.boot.MetadataSources;
+import org.hibernate.boot.registry.StandardServiceRegistry;
+import org.hibernate.boot.registry.StandardServiceRegistryBuilder;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
@@ -35,8 +40,14 @@ import java.util.Date;
 import java.util.List;
 import java.util.Properties;
 
+
+
 public class DecisionService {
     static List<String> data = new ArrayList<>();
+    final StandardServiceRegistry registry = new StandardServiceRegistryBuilder()
+            .configure()
+            .build();
+
 
     public static void main(String[] args) throws IOException, SAXException, ParserConfigurationException, ParseException {
 
@@ -56,34 +67,47 @@ public class DecisionService {
                 e.printStackTrace();
             } catch (ParseException e) {
                 e.printStackTrace();
+            } catch (SAXException e) {
+                e.printStackTrace();
+            } catch (IOException e) {
+                e.printStackTrace();
             }
             return value;
         });
 
-
-        outputStream.to("test_topic_xml");
+        outputStream.to("test_topic_a");
         KafkaStreams kafkaStreams = new KafkaStreams(streamsBuilder.build(), properties);
         kafkaStreams.start();
-
     }
 
-    static String makeDecision(String xml) throws ParserConfigurationException, ParseException {
+    static String makeDecision(String xml) throws ParserConfigurationException, ParseException, IOException, SAXException {
+//        final StandardServiceRegistry registry = new StandardServiceRegistryBuilder()
+//                .configure()
+//                .build();
         Request request = xmlToClass(xml);
+        String decision = "refused";
         Integer age = new Date().getYear() - request.getBorrower().getDateOfBirth().getYear();
         if (age > 18 && request.getBorrower().getIncomePerMonth() / 2 > request.getBorrower().getExpensesPerMonth() / 2)
-            return "approved";
+            decision = "approved";
         if (age < 18 || request.getBorrower().getIncomePerMonth() < request.getBorrower().getExpensesPerMonth())
-            return "refused";
+            decision = "refused";
         if (age > 18 && request.getBorrower().getIncomePerMonth() >= request.getBorrower().getExpensesPerMonth() && request.getBorrower().getExpensesPerMonth() > request.getBorrower().getIncomePerMonth() / 2)
-            return "offer" + request.getBorrower().getIncomePerMonth() / 2;
-        return "refused";
+            decision = "offer: " + request.getBorrower().getIncomePerMonth() / 2;
+        request.setDecision(decision);
+//        try(SessionFactory sessionFactory = new MetadataSources( registry ).buildMetadata().buildSessionFactory();
+//            Session session = sessionFactory.openSession();
+//        ) {
+//            session.beginTransaction();
+//            session.save(request);
+//            session.getTransaction().commit();
+//        }
+        return decision;
     }
 
-
-    static Request xmlToClass(String xml) throws ParserConfigurationException, ParseException {
+    static Request xmlToClass(String xml) throws ParserConfigurationException, ParseException, IOException, SAXException {
         DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
         DocumentBuilder builder = factory.newDocumentBuilder();
-        Document document = convertStringToXMLDocument(xml);
+        Document document = builder.parse(new InputSource(new StringReader(xml)));
         Element element = document.getDocumentElement();
         NodeList nodeList = element.getChildNodes();
         process(nodeList);
@@ -104,7 +128,6 @@ public class DecisionService {
                     Text text = (Text) nodeList.item(i).getFirstChild();
                     value += text.getData().trim();
                     data.add(value);
-//                    System.out.println(value);
                 }
                 if (nodeList.item(i).hasChildNodes() && nodeList.item(i) instanceof Element && nodeList.item(i).getChildNodes().getLength() > 1) {
                     NodeList nodeList1 = nodeList.item(i).getChildNodes();
@@ -112,25 +135,6 @@ public class DecisionService {
                 }
             }
         }
-    }
-
-    private static Document convertStringToXMLDocument(String xmlString) {
-        //Parser that produces DOM object trees from XML content
-        DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
-
-        //API to obtain DOM Document instance
-        DocumentBuilder builder = null;
-        try {
-            //Create DocumentBuilder with default configuration
-            builder = factory.newDocumentBuilder();
-
-            //Parse the content to Document object
-            Document doc = builder.parse(new InputSource(new StringReader(xmlString)));
-            return doc;
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        return null;
     }
 
 }

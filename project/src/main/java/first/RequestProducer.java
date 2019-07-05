@@ -38,9 +38,10 @@ public class RequestProducer {
         DocumentBuilder docBuilder = dbfac.newDocumentBuilder();
         Document document = docBuilder.parse("project/src/main/resources/doc.xml");
         String xmlString = xmlToString(document);
-        ProducerRecord<String, String> record = new ProducerRecord<String, String>("test_topic_xml", file.getName(),xmlString);
+        ProducerRecord<String, String> record = new ProducerRecord<String, String>("test_topic_xml", file.getName(), xmlString);
 
         producer.send(record);
+
         producer.close();
 
     }

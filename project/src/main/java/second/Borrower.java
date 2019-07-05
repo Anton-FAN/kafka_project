@@ -3,6 +3,7 @@ package second;
 import java.util.Date;
 
 public class Borrower {
+    private Long id;
     private String name;
     private String surname;
     private String secondName;
@@ -11,6 +12,9 @@ public class Borrower {
     private Integer incomePerMonth;
     private Integer expensesPerMonth;
     private Employer employer;
+
+    public Borrower() {
+    }
 
     public Borrower(String name, String surname, String secondName, Date dateOfBirth, String gender, Integer incomePerMonth, Integer expensesPerMonth, Employer employer) {
         this.name = name;
@@ -21,6 +25,50 @@ public class Borrower {
         this.employer = employer;
         this.incomePerMonth = incomePerMonth;
         this.expensesPerMonth = expensesPerMonth;
+    }
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public void setSurname(String surname) {
+        this.surname = surname;
+    }
+
+    public String getSecondName() {
+        return secondName;
+    }
+
+    public void setSecondName(String secondName) {
+        this.secondName = secondName;
+    }
+
+    public void setDateOfBirth(Date dateOfBirth) {
+        this.dateOfBirth = dateOfBirth;
+    }
+
+    public void setGender(String gender) {
+        this.gender = gender;
+    }
+
+    public void setIncomePerMonth(Integer incomePerMonth) {
+        this.incomePerMonth = incomePerMonth;
+    }
+
+    public void setExpensesPerMonth(Integer expensesPerMonth) {
+        this.expensesPerMonth = expensesPerMonth;
+    }
+
+    public void setEmployer(Employer employer) {
+        this.employer = employer;
     }
 
     public String getName() {
