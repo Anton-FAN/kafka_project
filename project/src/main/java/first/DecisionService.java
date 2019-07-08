@@ -45,7 +45,7 @@ import java.util.Properties;
 
 public class DecisionService {
 
-    public static void main(String[] args) throws IOException, SAXException, ParserConfigurationException, ParseException {
+    public static void main(String[] args) {
 
         Properties properties = new Properties();
         properties.setProperty(StreamsConfig.BOOTSTRAP_SERVERS_CONFIG, "127.0.0.1:9092");

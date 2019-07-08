@@ -36,8 +36,11 @@ public class RequestProducer {
         File file = new File("project/src/main/resources/document.xml");
         DocumentBuilderFactory dbfac = DocumentBuilderFactory.newInstance();
         DocumentBuilder docBuilder = dbfac.newDocumentBuilder();
-        Document document = docBuilder.parse("project/src/main/resources/document.xml");
-        String xmlString = xmlToString(document);
+        Document document = docBuilder.parse(file);
+        Transformer t = TransformerFactory.newInstance().newTransformer();
+        StringWriter sw = new StringWriter();
+        t.transform(new DOMSource(document), new StreamResult(sw));
+        String xmlString = sw.toString();
         ProducerRecord<String, String> record = new ProducerRecord<String, String>("test_topic_xml", file.getName(), xmlString);
 
         producer.send(record);
@@ -46,13 +49,5 @@ public class RequestProducer {
 
     }
 
-    static String xmlToString(Document document) throws TransformerException {
-        TransformerFactory tf = TransformerFactory.newInstance();
-        Transformer t = tf.newTransformer();
-        StringWriter sw = new StringWriter();
-        t.transform(new DOMSource(document), new StreamResult(sw));
-        sw.toString();
-        return sw.toString();
-    }
 
 }
