@@ -33,10 +33,10 @@ public class RequestProducer {
         properties.setProperty(ProducerConfig.VALUE_SERIALIZER_CLASS_CONFIG, StringSerializer.class.getName());
 
         KafkaProducer<String, String> producer = new KafkaProducer<>(properties);
-        File file = new File("project/src/main/resources/doc.xml");
+        File file = new File("project/src/main/resources/document.xml");
         DocumentBuilderFactory dbfac = DocumentBuilderFactory.newInstance();
         DocumentBuilder docBuilder = dbfac.newDocumentBuilder();
-        Document document = docBuilder.parse("project/src/main/resources/doc.xml");
+        Document document = docBuilder.parse("project/src/main/resources/document.xml");
         String xmlString = xmlToString(document);
         ProducerRecord<String, String> record = new ProducerRecord<String, String>("test_topic_xml", file.getName(), xmlString);
 

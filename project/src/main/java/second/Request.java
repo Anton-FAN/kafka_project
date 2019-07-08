@@ -1,9 +1,13 @@
 package second;
 
 import javax.persistence.*;
+import javax.xml.bind.annotation.XmlRootElement;
+import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
 import java.util.Date;
 @Entity
 @Table(name = "Request")
+@XmlRootElement
+
 public class Request {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY )
@@ -38,6 +42,7 @@ public class Request {
     public void setDecision(String decision) {
         this.decision = decision;
     }
+    @XmlJavaTypeAdapter(DateTimeAdapter.class)
 
     public void setDate(Date date) {
         this.date = date;

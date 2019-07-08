@@ -1,6 +1,7 @@
 package second;
 
 import javax.persistence.*;
+import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
 import java.util.Date;
 @Entity
 @Table(name = "BORROWER")
@@ -58,6 +59,7 @@ public class Borrower {
     public void setSecondName(String secondName) {
         this.secondName = secondName;
     }
+    @XmlJavaTypeAdapter(DateTimeAdapter.class)
 
     public void setDateOfBirth(Date dateOfBirth) {
         this.dateOfBirth = dateOfBirth;
