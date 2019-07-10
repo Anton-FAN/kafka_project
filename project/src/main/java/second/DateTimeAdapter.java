@@ -5,7 +5,7 @@ import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
-class DateTimeAdapter extends XmlAdapter<String, Date> {
+public class DateTimeAdapter extends XmlAdapter<String, Date> {
 
     private final DateFormat dateFormat = new SimpleDateFormat("dd-MM-yyyy");
     @Override

@@ -63,6 +63,9 @@
                     </execution>
                 </executions>
                 <configuration>
+                    <xjbSources>
+                        <xjbSource>src/main/resources/jaxb/bindings.xjb</xjbSource>
+                    </xjbSources>
                     <sources>
                         <source>src/main/resources/request.xsd</source>
                     </sources>
