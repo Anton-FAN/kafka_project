@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema attributeFormDefault="unqualified" elementFormDefault="qualified" xmlns:xs="http://www.w3.org/2001/XMLSchema">
+  <xs:element name="request" type="requestType">
+    <xs:annotation>
+      <xs:documentation>&lt;?xml version="1.0" encoding="UTF-8"?></xs:documentation>
+    </xs:annotation>
+  </xs:element>
+  <xs:complexType name="employerType">
+    <xs:sequence>
+      <xs:element type="xs:string" name="inn"/>
+      <xs:element type="xs:string" name="name"/>
+      <xs:element type="xs:string" name="phone-number"/>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="borrowerType">
+    <xs:sequence>
+      <xs:element type="xs:string" name="name"/>
+      <xs:element type="xs:string" name="surname"/>
+      <xs:element type="xs:string" name="second-name"/>
+      <xs:element type="xs:date" name="date-of-birth"/>
+      <xs:element type="xs:string" name="gender"/>
+      <xs:element type="money" name="income-per-month"/>
+      <xs:element type="money" name="expenses-per-month"/>
+      <xs:element type="employerType" name="employer"/>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="requestType">
+    <xs:sequence>
+      <xs:element type="xs:string" name="date"/>
+      <xs:element type="money" name="amount"/>
+      <xs:element type="xs:string" name="period"/>
+      <xs:element type="borrowerType" name="borrower"/>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:simpleType name="money">
+    <xs:restriction base="xs:decimal">
+      <xs:fractionDigits value="2"/>
+    </xs:restriction>
+  </xs:simpleType>
+</xs:schema>
